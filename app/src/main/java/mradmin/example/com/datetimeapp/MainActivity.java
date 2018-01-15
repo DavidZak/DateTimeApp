@@ -26,12 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerViewMain = findViewById(R.id.recyclerViewMain);
 
-
         List<NoteEntity> noteEntities = new ArrayList<>();
         for (int i=0;i<7;i++){
             noteEntities.add(new NoteEntity(String.valueOf(i), i, new NoteContent("","", ""), true));
 
         }
+
         NoteAdapter noteAdapter = new NoteAdapter(noteEntities);
         recyclerViewMain.setAdapter(noteAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(this);
