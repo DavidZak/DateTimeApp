@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imageViewNoteImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/ic_launcher_round"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNoteText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageViewNoteImage"
+        android:layout_toLeftOf="@id/linearLayoutNoteText2"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+
+        <TextView
+            android:id="@+id/textViewNoteTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="note title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+        <TextView
+            android:id="@+id/textViewNoteDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="note description"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNoteText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentEnd="true"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/textViewNoteTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="note title" />
+
+        <ImageView
+            android:foreground="@color/colorAccent"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:srcCompat="@mipmap/ic_launcher_round"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
