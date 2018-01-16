@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +22,13 @@
             android:name=".activity.NoteDetailActivity"
             android:label="@string/title_activity_note_detail"
             android:theme="@style/AppTheme"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.5" />
 
     </application>
 

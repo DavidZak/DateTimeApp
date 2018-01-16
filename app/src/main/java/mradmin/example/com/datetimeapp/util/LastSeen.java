@@ -52,6 +52,10 @@ public class LastSeen extends Application {
         }
     }
 
+    public static String getFullStringDate(Date date) {
+        return new SimpleDateFormat("d MMM yyyy HH:mm").format(date);
+    }
+
     public static String getFullStringDate(long dateTime) {
         if (dateTime < 1000000000000L) {
             // if timestamp given in seconds, convert to millis

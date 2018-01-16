@@ -11,9 +11,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp"
-        android:elevation="0dp">
+        android:layout_height="wrap_content">
 
         <include layout="@layout/main_toolbar_layout"/>
 
@@ -66,8 +64,7 @@
             android:src="@drawable/ic_create"
             app:backgroundTint="@color/colorAccent"
             android:tint="?android:textColorPrimary"
-            android:layout_gravity="bottom|right|end"
-            app:layout_behavior="mradmin.example.com.datetimeapp.view.adapter.ScrollingFABBehaviour" />
+            android:layout_gravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 

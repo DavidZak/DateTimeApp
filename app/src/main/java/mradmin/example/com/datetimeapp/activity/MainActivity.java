@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton floatingActionButton;
 
-    CustomRecyclerScrollViewListener customRecyclerScrollViewListener;
+    private CustomRecyclerScrollViewListener customRecyclerScrollViewListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,32 +44,28 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewMain.setEmptyView(findViewById(R.id.notesEmptyView));
 
         List<NoteEntity> noteEntities = new ArrayList<>();
-        for (int i=0;i<5;i++){
-            noteEntities.add(new NoteEntity(String.valueOf(i), i, new NoteContent("not pinned " + i,"not pinned description very long and not good for now" + i, ""), true, null, false));
+        for (int i=0;i<7;i++){
+            noteEntities.add(new NoteEntity(String.valueOf(i), i, new NoteContent("not pinned " + i,"not pinned description very long and not good for now " + i, ""), true, null, false));
 
         }
-        for (int i=0;i<5;i++){
-            noteEntities.add(new NoteEntity(String.valueOf(i), i, new NoteContent("note " + i,"description " + i, ""), false, new Date(2017,9,13), true));
-
+        for (int i=0;i<7;i++){
+            noteEntities.add(new NoteEntity(String.valueOf(i), i, new NoteContent("note sadkf hjsdhfkh sadjhfjsdh fhjsdah fsdf " + i,"description " + i, ""), false, new Date(System.currentTimeMillis()), true));
         }
 
-        customRecyclerScrollViewListener = new CustomRecyclerScrollViewListener() {
-            @Override
-            public void show() {
+        recyclerViewMain.addOnScrollListener(
+                new CustomRecyclerScrollViewListener() {
 
-                floatingActionButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-//                mAddToDoItemFAB.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2.0f)).start();
-            }
+                    @Override
+                    public void hide() {
+                        floatingActionButton.hide();
+                    }
 
-            @Override
-            public void hide() {
-
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)floatingActionButton.getLayoutParams();
-                int fabMargin = lp.bottomMargin;
-                floatingActionButton.animate().translationY(floatingActionButton.getHeight()+fabMargin).setInterpolator(new AccelerateInterpolator(2.0f)).start();
-            }
-        };
-        recyclerViewMain.addOnScrollListener(customRecyclerScrollViewListener);
+                    @Override
+                    public void show() {
+                        floatingActionButton.show();
+                    }
+                });
+        //-------------
 
         NoteAdapter noteAdapter = new NoteAdapter(noteEntities);
         recyclerViewMain.setAdapter(noteAdapter);

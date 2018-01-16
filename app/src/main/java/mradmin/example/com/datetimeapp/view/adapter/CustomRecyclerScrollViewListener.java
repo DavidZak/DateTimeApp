@@ -25,6 +25,9 @@ public abstract class CustomRecyclerScrollViewListener extends RecyclerView.OnSc
         if((isVisible && dy>0) || (!isVisible && dy<0)){
             scrollDist += dy;
         }
+        if (recyclerView.getAdapter().getItemCount() < 10){
+            show();
+        }
     }
     public abstract void show();
     public abstract void hide();

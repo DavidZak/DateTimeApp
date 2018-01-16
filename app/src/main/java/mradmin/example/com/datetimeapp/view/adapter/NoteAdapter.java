@@ -15,6 +15,7 @@ import java.util.List;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.activity.NoteDetailActivity;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
+import mradmin.example.com.datetimeapp.util.LastSeen;
 
 /**
  * Created by yks-11 on 1/15/18.
@@ -23,6 +24,8 @@ import mradmin.example.com.datetimeapp.model.NoteEntity;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements MyItemTouchHelper.ItemTouchHelperAdapter {
     private List<NoteEntity> items;
     public static final String NOTE_ITEM = "com.example.mradmin.datetimeapp.MainActivity";
+
+    LastSeen lastSeen = new LastSeen();
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
@@ -61,17 +64,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
 
         if (noteEntity.isDated()) {
             if (noteEntity.getDate() != null){
-                holder.textViewTime.setText(noteEntity.getDate().toString());
+                holder.textViewTime.setText(lastSeen.getFullStringDate(noteEntity.getDate()));
             }
         }
 
-        if (noteEntity.isPinned())
-
+        if (noteEntity.isPinned()) {
             holder.imageViewPinned.setVisibility(View.VISIBLE);
-
-        else
-
+        } else {
             holder.imageViewPinned.setVisibility(View.GONE);
+        }
 
     }
 
