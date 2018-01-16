@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import butterknife.ButterKnife;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteContent;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
+import mradmin.example.com.datetimeapp.util.LastSeen;
 
 public class NoteDetailActivity extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -51,6 +54,9 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     @BindView(R.id.switchCompatSetTime)
     SwitchCompat switchCompat;
 
+    @BindView(R.id.noteImageView)
+    ImageView noteImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +79,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         textViewTime = findViewById(R.id.timeEditText);
         textInputLayout = findViewById(R.id.timeTextInput);
         switchCompat = findViewById(R.id.switchCompatSetTime);
+        noteImageView = findViewById(R.id.noteImageView);
 
         textViewTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +140,9 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         });
     }
 
-    private void saveNewNote (String title, String desc, @Nullable String imageUrl, @Nullable Date date) {
+    private void saveNote (String title, String desc, @Nullable String imageUrl, @Nullable Date date, boolean isDated) {
 
-        noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, new NoteContent(title, desc, imageUrl, date), false);
+        noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, new NoteContent(title, desc, imageUrl), false, date, isDated);
 
     }
 
@@ -143,6 +150,22 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
 
         textViewTitle.setText(noteEntity.getContent().getTitle());
         textViewDesc.setText(noteEntity.getContent().getDescription());
+
+
+        if (noteEntity.isDated()) {
+
+            switchCompat.setChecked(true);
+
+            if (noteEntity.getDate()!=null){
+
+                Date date = noteEntity.getDate();
+                textViewTime.setText(new SimpleDateFormat("yyyy-mm-dd").format(date));
+
+            }
+        }
+        else {
+            switchCompat.setChecked(false);
+        }
 
     }
 

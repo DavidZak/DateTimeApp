@@ -13,15 +13,35 @@ public class NoteEntity implements Serializable {
     private int listPosition;
     private NoteContent content;
     private boolean pinned;
+    private Date date;
+    private boolean dated;
 
-    public NoteEntity() {
-    }
-
-    public NoteEntity(String id, int listPosition, NoteContent content, boolean pinned) {
+    public NoteEntity(String id, int listPosition, NoteContent content, boolean pinned, Date date, boolean dated) {
         this.id = id;
         this.listPosition = listPosition;
         this.content = content;
         this.pinned = pinned;
+        this.date = date;
+        this.dated = dated;
+    }
+
+    public NoteEntity() {
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public boolean isDated() {
+        return dated;
+    }
+
+    public void setDated(boolean dated) {
+        this.dated = dated;
     }
 
     public String getId() {
