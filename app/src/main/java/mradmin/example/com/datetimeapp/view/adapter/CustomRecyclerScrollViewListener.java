@@ -20,7 +20,7 @@ public abstract class CustomRecyclerScrollViewListener extends RecyclerView.OnSc
         else if(!isVisible && scrollDist < -MINIMUM){
             show();
             scrollDist = 0;
-            isVisible =true;
+            isVisible = true;
         }
         if((isVisible && dy>0) || (!isVisible && dy<0)){
             scrollDist += dy;

@@ -48,9 +48,6 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     @BindView(R.id.timeEditText)
     EditText textViewTime;
 
-    @BindView(R.id.timeTextInput)
-    TextInputLayout textInputLayout;
-
     @BindView(R.id.switchCompatSetTime)
     SwitchCompat switchCompat;
 
@@ -77,7 +74,6 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         textViewTitle = findViewById(R.id.titleEditText);
         textViewDesc = findViewById(R.id.descriptionEditText);
         textViewTime = findViewById(R.id.timeEditText);
-        textInputLayout = findViewById(R.id.timeTextInput);
         switchCompat = findViewById(R.id.switchCompatSetTime);
         noteImageView = findViewById(R.id.noteImageView);
 
@@ -96,9 +92,9 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         });
 
         if (switchCompat.isChecked()) {
-            textInputLayout.setVisibility(View.VISIBLE);
+            textViewTime.setVisibility(View.VISIBLE);
         } else {
-            textInputLayout.setVisibility(View.GONE);
+            textViewTime.setVisibility(View.GONE);
         }
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -106,9 +102,9 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 if (switchCompat.isChecked()){
-                    textInputLayout.setVisibility(View.VISIBLE);
+                    textViewTime.setVisibility(View.VISIBLE);
                 } else {
-                    textInputLayout.setVisibility(View.GONE);
+                    textViewTime.setVisibility(View.GONE);
                 }
 
             }
