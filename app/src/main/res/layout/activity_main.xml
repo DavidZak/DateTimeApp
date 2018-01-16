@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mradmin.example.com.datetimeapp.MainActivity"
+    tools:context=".activity.MainActivity"
     android:background="@color/colorPrimaryDark">
 
     <include layout="@layout/main_app_bar" android:id="@+id/main_app_bar"/>

@@ -1,13 +1,33 @@
 package mradmin.example.com.datetimeapp.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by yks-11 on 1/15/18.
  */
 
-public class NoteContent {
+public class NoteContent implements Serializable {
+
     private String title;
     private String description;
     private String imageUrl;
+    private Date time;
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public NoteContent(String title, String description, String imageUrl, Date time) {
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.time = time;
+    }
 
     public NoteContent() {
     }

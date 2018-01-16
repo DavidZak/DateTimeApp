@@ -1,10 +1,13 @@
 package mradmin.example.com.datetimeapp.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by yks-11 on 1/15/18.
  */
 
-public class NoteEntity {
+public class NoteEntity implements Serializable {
 
     private String id;
     private int listPosition;

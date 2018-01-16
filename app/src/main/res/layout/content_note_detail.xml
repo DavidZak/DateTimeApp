@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.NoteDetailActivity"
+    tools:showIn="@layout/activity_note_detail"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/titleTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="?android:textColorTertiary"
+            android:layout_marginBottom="16dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/titleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="type title here..." />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/descriptionTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="?android:textColorTertiary"
+            android:layout_marginBottom="16dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="type descripton here..." />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchCompatSetTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="set time"
+            android:paddingLeft="8dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            android:textColor="?android:textColorPrimary"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/timeTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="?android:textColorTertiary"
+            android:visibility="gone">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/timeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="select time here..."
+                android:drawableRight="@drawable/ic_calendar" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

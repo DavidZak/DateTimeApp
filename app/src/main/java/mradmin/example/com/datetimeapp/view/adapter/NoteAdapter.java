@@ -1,5 +1,6 @@
 package mradmin.example.com.datetimeapp.view.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import mradmin.example.com.datetimeapp.R;
+import mradmin.example.com.datetimeapp.activity.NoteDetailActivity;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 
 /**
@@ -20,6 +22,7 @@ import mradmin.example.com.datetimeapp.model.NoteEntity;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements MyItemTouchHelper.ItemTouchHelperAdapter {
     private List<NoteEntity> items;
+    public static final String NOTE_ITEM = "com.example.mradmin.datetimeapp.MainActivity";
 
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
@@ -51,7 +54,20 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(final NoteAdapter.ViewHolder holder, final int position) {
-        NoteEntity item = items.get(position);
+        NoteEntity noteEntity = items.get(position);
+
+        holder.textViewTitle.setText(noteEntity.getContent().getTitle());
+        holder.textViewDescription.setText(noteEntity.getContent().getDescription());
+//        holder.textViewTime.setText(noteEntity.getContent().getTime().toString());
+
+        if (noteEntity.isPinned())
+
+            holder.imageViewPinned.setVisibility(View.VISIBLE);
+
+        else
+
+            holder.imageViewPinned.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -70,9 +86,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
 
         View mView;
 
-        ImageView imageViewImage;
-        TextView textViewTitle;
-        TextView textViewDescription;
+        public ImageView imageViewImage;
+        public TextView textViewTitle;
+        public TextView textViewDescription;
+        public TextView textViewTime;
+        public ImageView imageViewPinned;
 
         public ViewHolder(View v) {
             super(v);
@@ -83,8 +101,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
                 @Override
                 public void onClick(View v) {
 
+                    NoteEntity note = items.get(ViewHolder.this.getAdapterPosition());
+                    Intent intent = new Intent(v.getContext(), NoteDetailActivity.class);
+                    intent.putExtra(NOTE_ITEM, note);
+                    v.getContext().startActivity(intent);
                 }
             });
+
+            imageViewImage=v.findViewById(R.id.imageViewNoteImage);
+            textViewTitle = v.findViewById(R.id.textViewNoteTitle);
+            textViewDescription = v.findViewById(R.id.textViewNoteDescription);
+            textViewTime = v.findViewById(R.id.textViewNoteTime);
+            imageViewPinned = v.findViewById(R.id.imageViewNotePinned);
 
         }
     }

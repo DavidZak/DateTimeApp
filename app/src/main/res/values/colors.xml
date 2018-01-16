@@ -11,4 +11,8 @@
     <color name="rippleEffect">#2f3440</color>
 
     <color name="divider">#303643</color>
+
+    <color name="mdtp_accent_color">#009ad2</color>
+    <color name="mdtp_accent_color_dark">#017dab</color>
+
 </resources>
