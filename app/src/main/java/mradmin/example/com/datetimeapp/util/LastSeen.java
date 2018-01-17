@@ -52,6 +52,10 @@ public class LastSeen extends Application {
         }
     }
 
+    public static String getFullStringDate(String dateString) {
+        return new SimpleDateFormat("d MMM yyyy HH:mm").format(dateString);
+    }
+
     public static String getFullStringDate(Date date) {
         return new SimpleDateFormat("d MMM yyyy HH:mm").format(date);
     }

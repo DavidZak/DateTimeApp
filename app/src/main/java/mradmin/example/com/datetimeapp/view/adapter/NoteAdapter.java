@@ -59,12 +59,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
     public void onBindViewHolder(final NoteAdapter.ViewHolder holder, final int position) {
         NoteEntity noteEntity = items.get(position);
 
-        holder.textViewTitle.setText(noteEntity.getContent().getTitle());
-        holder.textViewDescription.setText(noteEntity.getContent().getDescription());
+        holder.textViewTitle.setText(noteEntity.getTitle());
+        holder.textViewDescription.setText(noteEntity.getDescription());
 
         if (noteEntity.isDated()) {
-            if (noteEntity.getDate() != null){
-                holder.textViewTime.setText(lastSeen.getFullStringDate(noteEntity.getDate()));
+            if (noteEntity.getDate() != null && !noteEntity.getDate().isEmpty()){
+                holder.textViewTime.setText(noteEntity.getDate());
             }
         }
 

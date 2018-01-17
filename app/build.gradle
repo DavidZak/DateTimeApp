@@ -32,4 +32,7 @@ dependencies {
     compile 'com.android.support:support-v13:27.0.2'
     compile 'com.wdullaer:materialdatetimepicker:3.5.0'
     compile 'com.jakewharton:butterknife:8.8.1'
+
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 }

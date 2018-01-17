@@ -66,6 +66,21 @@
             android:tint="?android:textColorPrimary"
             android:layout_gravity="bottom|right|end" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80151c21"
+            android:visibility="gone">
+
+            <mradmin.example.com.datetimeapp.view.adapter.NoteRowOptionsLayout
+                android:id="@+id/noteRowOptionsCustomLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
     </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
