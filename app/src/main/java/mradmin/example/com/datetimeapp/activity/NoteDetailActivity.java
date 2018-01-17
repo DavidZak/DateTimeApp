@@ -186,12 +186,23 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                     }
                 }
 
-                saveNote(title, description, null, date, isDated);
+                if (allFieldsOk())
+                    saveNote(title, description, null, date, isDated);
+                else
+                    Toast.makeText(NoteDetailActivity.this, "You need to fill one or more fields", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void saveNote (String title, String desc, @Nullable String imageUrl, @Nullable String date, boolean isDated) {
+    public boolean allFieldsOk() {
+        if (textViewTitle.getText().toString().equals("") || textViewDesc.getText().toString().equals("") || (textViewTime.getText().toString().equals("") &&
+                switchCompat.isChecked()) || (textViewTimeTime.getText().toString().equals("") && switchCompat.isChecked())) {
+            return false;
+        }
+        return true;
+    }
+
+    private void saveNote(String title, String desc, @Nullable String imageUrl, @Nullable String date, boolean isDated) {
 
         AppDatabase appDatabase = Room.databaseBuilder(this,
                 AppDatabase.class, "room-notes-database").build();
@@ -208,6 +219,11 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                     noteEntityDao.insertAll(noteEntity);
                     return null;
                 }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    Toast.makeText(NoteDetailActivity.this, "Note added", Toast.LENGTH_SHORT).show();
+                }
             }.execute();
 
         } else {
@@ -223,12 +239,15 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                     noteEntityDao.updateNote(noteEntity);
                     return null;
                 }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    Toast.makeText(NoteDetailActivity.this, "Note updated", Toast.LENGTH_SHORT).show();
+                }
             }.execute();
         }
 
-
         System.out.println("+++++++++++++++++++++++ " + noteEntity);
-
     }
 
     private void getExistingNoteDataMode(NoteEntity noteEntity) {
@@ -240,7 +259,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
 
             switchCompat.setChecked(true);
 
-            if (noteEntity.getDate()!=null){
+            if (noteEntity.getDate() != null) {
 
                 String date = noteEntity.getDate();
                 if (date != null) {
@@ -254,26 +273,25 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                 setTimeEditText();
 
             }
-        }
-        else {
+        } else {
             switchCompat.setChecked(false);
         }
 
     }
 
-    public void setDate(int year, int month, int day){
+    public void setDate(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
         int hour, minute;
 
         Calendar reminderCalendar = Calendar.getInstance();
         reminderCalendar.set(year, month, day);
 
-        if(reminderCalendar.before(calendar)){
+        if (reminderCalendar.before(calendar)) {
             Toast.makeText(this, "My time-machine is a bit rusty", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(noteDate!=null) {
+        if (noteDate != null) {
             calendar.setTime(noteDate);
         }
 
@@ -286,9 +304,9 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         setDateEditText();
     }
 
-    public void setTime(int hour, int minute){
+    public void setTime(int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
-        if(noteDate!=null) {
+        if (noteDate != null) {
             calendar.setTime(noteDate);
         }
         int year = calendar.get(Calendar.YEAR);
@@ -301,12 +319,12 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     }
 
     public void setDateEditText() {
-        if (noteDate!=null)
+        if (noteDate != null)
             textViewTime.setText(new SimpleDateFormat("d MMM yyyy").format(noteDate));
     }
 
     public void setTimeEditText() {
-        if (noteDate!=null)
+        if (noteDate != null)
             textViewTimeTime.setText(new SimpleDateFormat("HH:mm").format(noteDate));
     }
 

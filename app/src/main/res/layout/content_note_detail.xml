@@ -71,7 +71,8 @@
                 android:layout_marginRight="4dp"
                 android:textColorHint="?android:textColorTertiary"
                 android:drawableRight="@drawable/ic_calendar"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:focusable="false"/>
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/timeEditTextTime"
@@ -81,7 +82,8 @@
                 android:layout_marginLeft="4dp"
                 android:textColorHint="?android:textColorTertiary"
                 android:drawableRight="@drawable/ic_time"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:focusable="false"/>
         </LinearLayout>
 
     </LinearLayout>

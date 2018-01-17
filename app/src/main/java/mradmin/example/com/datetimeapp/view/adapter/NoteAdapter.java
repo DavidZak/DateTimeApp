@@ -70,7 +70,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         if (noteEntity.isDated()) {
             if (noteEntity.getDate() != null && !noteEntity.getDate().isEmpty()){
                 holder.textViewTime.setText(noteEntity.getDate());
+                holder.textViewTime.setVisibility(View.VISIBLE);
             }
+        } else {
+            holder.textViewTime.setVisibility(View.GONE);
         }
 
         if (noteEntity.isPinned()) {
