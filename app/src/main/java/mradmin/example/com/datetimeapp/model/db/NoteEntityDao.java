@@ -29,7 +29,7 @@ public interface NoteEntityDao {
 
     // Удаление Note из бд
     @Delete
-    void delete(NoteEntity notes);
+    void delete(NoteEntity note);
 
     // Получение всех Note из бд
     @Query("SELECT * FROM noteEntity")

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.service.voice.VoiceInteractionService;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mradmin.example.com.datetimeapp.App;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;
@@ -71,16 +73,12 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm");
 
     private Date noteDate;
-    AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_detail);
         ButterKnife.bind(this);
-
-         db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "room-notes-database").build();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -195,25 +193,39 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
 
     private void saveNote (String title, String desc, @Nullable String imageUrl, @Nullable String date, boolean isDated) {
 
+        AppDatabase appDatabase = Room.databaseBuilder(this,
+                AppDatabase.class, "room-notes-database").build();
+
+        final NoteEntityDao noteEntityDao = appDatabase.getNoteEntityDao();
+
         if (noteEntity == null) {
             noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, title, desc, imageUrl, false, date, isDated);
+
+            new AsyncTask<NoteEntity, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(NoteEntity... voids) {
+                    noteEntityDao.insertAll(noteEntity);
+                    return null;
+                }
+            }.execute();
+
         } else {
             noteEntity.setDate(date);
             noteEntity.setDated(isDated);
             noteEntity.setTitle(title);
             noteEntity.setDescription(desc);
             noteEntity.setImageUrl(imageUrl);
+
+            new AsyncTask<NoteEntity, Void, Void>() {
+                @Override
+                protected Void doInBackground(NoteEntity... noteEntities) {
+                    noteEntityDao.updateNote(noteEntity);
+                    return null;
+                }
+            }.execute();
         }
 
-        final NoteEntityDao noteEntityDao = db.getNoteEntityDao();
-        new AsyncTask<NoteEntity, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(NoteEntity... voids) {
-                noteEntityDao.insertAll(noteEntity);
-                return null;
-            }
-        }.execute();
 
         System.out.println("+++++++++++++++++++++++ " + noteEntity);
 

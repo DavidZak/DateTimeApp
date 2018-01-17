@@ -1,6 +1,8 @@
 package mradmin.example.com.datetimeapp.view.adapter;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import mradmin.example.com.datetimeapp.App;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.activity.NoteDetailActivity;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
+import mradmin.example.com.datetimeapp.model.db.AppDatabase;
+import mradmin.example.com.datetimeapp.model.db.NoteEntityDao;
 import mradmin.example.com.datetimeapp.util.LastSeen;
 
 /**
@@ -22,7 +27,9 @@ import mradmin.example.com.datetimeapp.util.LastSeen;
  */
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements MyItemTouchHelper.ItemTouchHelperAdapter {
+
     private List<NoteEntity> items;
+
     public static final String NOTE_ITEM = "com.example.mradmin.datetimeapp.MainActivity";
 
     LastSeen lastSeen = new LastSeen();
@@ -43,10 +50,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
 
     @Override
     public void onItemRemoved(final int position) {
-
         items.remove(items.get(position));
         notifyItemRemoved(position);
-
     }
 
     @Override

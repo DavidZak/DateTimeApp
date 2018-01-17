@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import mradmin.example.com.datetimeapp.App;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;
@@ -44,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "room-notes-database").build();
-
         recyclerViewMain = findViewById(R.id.recyclerViewMain);
         recyclerViewMain.setEmptyView(findViewById(R.id.notesEmptyView));
 
+        AppDatabase appDatabase = Room.databaseBuilder(this,
+                AppDatabase.class, "room-notes-database").build();
 
-        final NoteEntityDao noteEntityDao = db.getNoteEntityDao();
+        final NoteEntityDao noteEntityDao = appDatabase.getNoteEntityDao();
+
         new AsyncTask<Void, Void, List<NoteEntity>>() {
             @Override
             protected List<NoteEntity> doInBackground(Void... params) {
