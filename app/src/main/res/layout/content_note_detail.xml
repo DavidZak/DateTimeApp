@@ -49,19 +49,40 @@
             android:id="@+id/switchCompatSetTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="set time"
-            android:paddingLeft="8dp"
+            android:text="Set reminder date"
+            android:paddingLeft="4dp"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"
             android:textColor="?android:textColorPrimary"/>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/timeEditText"
+        <LinearLayout
+            android:id="@+id/linearLayoutDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="select time here..."
-            android:textColorHint="?android:textColorTertiary"
-            android:drawableRight="@drawable/ic_calendar" />
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:gravity="center_vertical">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/timeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="select date"
+                android:layout_marginRight="4dp"
+                android:textColorHint="?android:textColorTertiary"
+                android:drawableRight="@drawable/ic_calendar"
+                android:layout_weight="1"/>
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/timeEditTextTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="select time"
+                android:layout_marginLeft="4dp"
+                android:textColorHint="?android:textColorTertiary"
+                android:drawableRight="@drawable/ic_time"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
     </LinearLayout>
 

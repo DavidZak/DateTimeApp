@@ -75,4 +75,9 @@ public class NoteEntity implements Serializable {
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
     }
+
+    @Override
+    public String toString() {
+        return content + " ---- " + date + " --- " + isDated();
+    }
 }
