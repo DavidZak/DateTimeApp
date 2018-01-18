@@ -106,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        this.moveTaskToBack(true);
+    }
+
     public void initRecyclerView(List<NoteEntity> noteEntities) {
         if (noteEntities != null && noteEntities.size() > 0) {
             NoteAdapter noteAdapter = new NoteAdapter(noteEntities);
