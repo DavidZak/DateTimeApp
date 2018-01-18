@@ -71,6 +71,8 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     @BindView(R.id.imageViewSave)
     ImageView imageViewSave;
 
+    @BindView(R.id.imageViewPin)
+    ImageView imageViewPin;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm");
 
@@ -101,6 +103,15 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         switchCompat = findViewById(R.id.switchCompatSetTime);
         noteImageView = findViewById(R.id.noteImageView);
         imageViewSave = findViewById(R.id.imageViewSave);
+        imageViewPin = findViewById(R.id.imageViewPin);
+
+        if (noteEntity != null) {
+            if (noteEntity.isPinned()){
+                imageViewPin.setColorFilter(getResources().getColor(R.color.colorAccent));
+            } else {
+                imageViewPin.setColorFilter(getResources().getColor(R.color.grey));
+            }
+        }
 
         textViewTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +205,34 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                     Toast.makeText(NoteDetailActivity.this, "You need to fill one or more fields", Toast.LENGTH_SHORT).show();
             }
         });
+
+        imageViewPin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (noteEntity != null){
+                    if (noteEntity.isPinned()) {
+                        unpin();
+                    }
+                    else {
+                        pin();
+                    }
+                }
+            }
+        });
+    }
+
+    public void pin() {
+        noteEntity.setPinned(true);
+        imageViewPin.setColorFilter(getResources().getColor(R.color.colorAccent));
+
+        Toast.makeText(this, "pinned", Toast.LENGTH_SHORT).show();
+    }
+
+    public void unpin() {
+        noteEntity.setPinned(false);
+        imageViewPin.setColorFilter(getResources().getColor(R.color.grey));
+
+        Toast.makeText(this, "un pinned", Toast.LENGTH_SHORT).show();
     }
 
     public boolean allFieldsOk() {
@@ -218,7 +257,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
 
                 @Override
                 protected Void doInBackground(NoteEntity... voids) {
-                    noteEntityDao.insertAll(noteEntity);
+                    noteEntityDao.insertNote(noteEntity);
                     return null;
                 }
 

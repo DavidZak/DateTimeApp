@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     private CustomRecyclerScrollViewListener customRecyclerScrollViewListener;
 
-    List<NoteEntity> noteEntities;
-
-    AppDatabase appDatabase;
-    NoteEntityDao noteEntityDao;
+    private AppDatabase appDatabase;
+    private NoteEntityDao noteEntityDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     Collections.swap(items, i, i - 1);
                 }
             }
+
             notifyItemMoved(fromPosition, toPosition);
         }
 
