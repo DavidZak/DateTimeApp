@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     //2: If it already exists then prompt user
                     Toast.makeText(MainActivity.this, "Notes already exists!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Notes does not exist! Hurray :)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Notes does not exist! Add some here", Toast.LENGTH_LONG).show();
                 }
             }
         }.execute();

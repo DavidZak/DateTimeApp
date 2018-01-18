@@ -1,6 +1,7 @@
 package mradmin.example.com.datetimeapp.activity;
 
 import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -248,6 +249,8 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         }
 
         System.out.println("+++++++++++++++++++++++ " + noteEntity);
+
+        startActivity(new Intent(NoteDetailActivity.this, MainActivity.class));
     }
 
     private void getExistingNoteDataMode(NoteEntity noteEntity) {
