@@ -78,6 +78,8 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
 
     private Date noteDate;
 
+    private boolean isPinned;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,14 +106,6 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         noteImageView = findViewById(R.id.noteImageView);
         imageViewSave = findViewById(R.id.imageViewSave);
         imageViewPin = findViewById(R.id.imageViewPin);
-
-        if (noteEntity != null) {
-            if (noteEntity.isPinned()){
-                imageViewPin.setColorFilter(getResources().getColor(R.color.colorAccent));
-            } else {
-                imageViewPin.setColorFilter(getResources().getColor(R.color.grey));
-            }
-        }
 
         textViewTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +194,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                 }
 
                 if (allFieldsOk())
-                    saveNote(title, description, null, date, isDated);
+                    saveNote(title, description, null, date, isDated, isPinned);
                 else
                     Toast.makeText(NoteDetailActivity.this, "You need to fill one or more fields", Toast.LENGTH_SHORT).show();
             }
@@ -209,29 +203,24 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         imageViewPin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (noteEntity != null){
-                    if (noteEntity.isPinned()) {
-                        unpin();
-                    }
-                    else {
-                        pin();
-                    }
+                if(isPinned){
+                    unpin();
+                } else {
+                    pin();
                 }
             }
         });
     }
 
     public void pin() {
-        noteEntity.setPinned(true);
         imageViewPin.setColorFilter(getResources().getColor(R.color.colorAccent));
-
+        isPinned = true;
         Toast.makeText(this, "pinned", Toast.LENGTH_SHORT).show();
     }
 
     public void unpin() {
-        noteEntity.setPinned(false);
         imageViewPin.setColorFilter(getResources().getColor(R.color.grey));
-
+        isPinned = false;
         Toast.makeText(this, "un pinned", Toast.LENGTH_SHORT).show();
     }
 
@@ -243,7 +232,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         return true;
     }
 
-    private void saveNote(String title, String desc, @Nullable String imageUrl, @Nullable String date, boolean isDated) {
+    private void saveNote(String title, String desc, @Nullable String imageUrl, @Nullable String date, boolean isDated, boolean isPinned) {
 
         AppDatabase appDatabase = Room.databaseBuilder(this,
                 AppDatabase.class, "room-notes-database").build();
@@ -251,7 +240,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         final NoteEntityDao noteEntityDao = appDatabase.getNoteEntityDao();
 
         if (noteEntity == null) {
-            noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, title, desc, imageUrl, false, date, isDated);
+            noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, title, desc, imageUrl, isPinned, date, isDated);
 
             new AsyncTask<NoteEntity, Void, Void>() {
 
@@ -273,6 +262,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
             noteEntity.setTitle(title);
             noteEntity.setDescription(desc);
             noteEntity.setImageUrl(imageUrl);
+            noteEntity.setPinned(isPinned);
 
             new AsyncTask<NoteEntity, Void, Void>() {
                 @Override
@@ -298,6 +288,13 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
         textViewTitle.setText(noteEntity.getTitle());
         textViewDesc.setText(noteEntity.getDescription());
 
+        isPinned = noteEntity.isPinned();
+        if (isPinned)
+            pin();
+        else
+            unpin();
+
+
         if (noteEntity.isDated()) {
 
             switchCompat.setChecked(true);
@@ -314,8 +311,8 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                 }
                 setDateEditText();
                 setTimeEditText();
-
             }
+
         } else {
             switchCompat.setChecked(false);
         }
