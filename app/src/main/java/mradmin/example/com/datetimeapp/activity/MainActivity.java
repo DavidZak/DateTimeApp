@@ -18,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import mradmin.example.com.datetimeapp.R;
@@ -109,8 +111,28 @@ public class MainActivity extends AppCompatActivity {
         this.moveTaskToBack(true);
     }
 
-    public void initRecyclerView(List<NoteEntity> noteEntities) {
+    public void initRecyclerView(final List<NoteEntity> noteEntities) {
         if (noteEntities != null && noteEntities.size() > 0) {
+
+            Collections.sort(noteEntities, new Comparator<NoteEntity>() {
+                @Override
+                public int compare(NoteEntity noteEntity, NoteEntity t1) {
+                    if (noteEntity.isPinned()) {
+                        if (t1.isPinned()) {
+                            return noteEntity.getTitle().compareTo(t1.getTitle());
+                        } else {
+                            return -1;
+                        }
+                    } else {
+                        if (t1.isPinned()) {
+                            return 1;
+                        } else {
+                            return noteEntity.getTitle().compareTo(t1.getTitle());
+                        }
+                    }
+                }
+            });
+
             NoteAdapter noteAdapter = new NoteAdapter(noteEntities);
             recyclerViewMain.setAdapter(noteAdapter);
             LinearLayoutManager manager = new LinearLayoutManager(this);
