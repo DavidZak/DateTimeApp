@@ -156,11 +156,22 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(sectionItemDecoration);
     }
 
+    NoteEntity containsIndex(List<NoteEntity> list, int index)  {
+        try {
+            return list.get(index);
+        } catch (IndexOutOfBoundsException e){
+            return null;
+        }
+    }
+
     private RecyclerSectionItemDecoration.SectionCallback getSectionCallback(final List<NoteEntity> notes) {
         return new RecyclerSectionItemDecoration.SectionCallback() {
             @Override
             public boolean isSection(int position) {
-                return position == 0
+                if (containsIndex(notes, position) == null)
+                    return position == 0;
+                else
+                    return position == 0
                         || notes.get(position).getTitle()
                         .charAt(0) != notes.get(position - 1).getTitle()
                         .charAt(0);
@@ -168,7 +179,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public CharSequence getSectionHeader(int position) {
-                return notes.get(position).getTitle()
+                if (containsIndex(notes, position) == null)
+                    return "";
+                else
+                    return notes.get(position).getTitle()
                         .subSequence(0,
                                 1);
             }
