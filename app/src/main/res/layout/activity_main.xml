@@ -38,7 +38,7 @@
                 android:layout_height="100dp" />
 
             <TextView
-                android:text="no notes"
+                android:text="You haven't any notes yet"
                 android:textSize="16sp"
                 android:paddingTop="4dp"
                 android:paddingBottom="8dp"
