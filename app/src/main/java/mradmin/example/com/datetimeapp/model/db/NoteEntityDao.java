@@ -10,10 +10,6 @@ import java.util.List;
 
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 
-/**
- * Created by yks-11 on 1/17/18.
- */
-
 @Dao
 public interface NoteEntityDao {
 

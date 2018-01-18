@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import mradmin.example.com.datetimeapp.R;
 
-/**
- * Created by yks-11 on 1/18/18.
- */
-
 public class RecyclerSectionItemDecoration extends RecyclerView.ItemDecoration {
 
     private final int             headerOffset;

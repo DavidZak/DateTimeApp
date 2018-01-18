@@ -7,10 +7,6 @@ import android.support.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by yks-11 on 1/15/18.
- */
-
 @Entity
 public class NoteEntity implements Serializable {
 

@@ -3,10 +3,6 @@ package mradmin.example.com.datetimeapp.view.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-/**
- * Created by yks-11 on 1/15/18.
- */
-
 public class MyItemTouchHelper extends ItemTouchHelper.Callback {
 
     private ItemTouchHelperAdapter adapter;

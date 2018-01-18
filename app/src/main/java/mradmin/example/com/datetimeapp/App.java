@@ -7,10 +7,6 @@ import android.os.Bundle;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;
 import mradmin.example.com.datetimeapp.model.db.NoteEntityDao;
 
-/**
- * Created by yks-11 on 1/17/18.
- */
-
 public class App extends Application {
 
     private static AppDatabase appDatabase;

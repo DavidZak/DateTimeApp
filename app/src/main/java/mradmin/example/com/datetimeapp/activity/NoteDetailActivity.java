@@ -28,12 +28,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mradmin.example.com.datetimeapp.App;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;

@@ -7,10 +7,6 @@ import android.widget.LinearLayout;
 
 import mradmin.example.com.datetimeapp.R;
 
-/**
- * Created by yks-11 on 1/17/18.
- */
-
 public class NoteRowOptionsLayout extends LinearLayout {
 
         public NoteRowOptionsLayout(Context context) {
