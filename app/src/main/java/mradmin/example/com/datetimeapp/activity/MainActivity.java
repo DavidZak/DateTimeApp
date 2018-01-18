@@ -3,6 +3,7 @@ package mradmin.example.com.datetimeapp.activity;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import mradmin.example.com.datetimeapp.model.db.AppDatabase;
 import mradmin.example.com.datetimeapp.model.db.NoteEntityDao;
 import mradmin.example.com.datetimeapp.view.adapter.CustomRecyclerScrollViewListener;
 import mradmin.example.com.datetimeapp.view.adapter.MyItemTouchHelper;
+import mradmin.example.com.datetimeapp.view.adapter.RecyclerSectionItemDecoration;
 import mradmin.example.com.datetimeapp.view.adapter.RecyclerViewEmptySupport;
 
 public class MainActivity extends AppCompatActivity {
@@ -138,10 +140,39 @@ public class MainActivity extends AppCompatActivity {
             LinearLayoutManager manager = new LinearLayoutManager(this);
             recyclerViewMain.setLayoutManager(manager);
 
+            initRecyclerItemSectionDecoration(recyclerViewMain, noteEntities);
+
             ItemTouchHelper.Callback callback = new MyItemTouchHelper(noteAdapter);
             itemTouchHelper = new ItemTouchHelper(callback);
             itemTouchHelper.attachToRecyclerView(recyclerViewMain);
         }
+    }
+
+    public void initRecyclerItemSectionDecoration(RecyclerView recyclerView, List<NoteEntity> noteEntities){
+        RecyclerSectionItemDecoration sectionItemDecoration =
+                new RecyclerSectionItemDecoration(getResources().getDimensionPixelSize(R.dimen.header),
+                        true,
+                        getSectionCallback(noteEntities));
+        recyclerView.addItemDecoration(sectionItemDecoration);
+    }
+
+    private RecyclerSectionItemDecoration.SectionCallback getSectionCallback(final List<NoteEntity> notes) {
+        return new RecyclerSectionItemDecoration.SectionCallback() {
+            @Override
+            public boolean isSection(int position) {
+                return position == 0
+                        || notes.get(position).getTitle()
+                        .charAt(0) != notes.get(position - 1).getTitle()
+                        .charAt(0);
+            }
+
+            @Override
+            public CharSequence getSectionHeader(int position) {
+                return notes.get(position).getTitle()
+                        .subSequence(0,
+                                1);
+            }
+        };
     }
 
     public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements MyItemTouchHelper.ItemTouchHelperAdapter {
