@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private AppDatabase appDatabase;
     private NoteEntityDao noteEntityDao;
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMM yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
