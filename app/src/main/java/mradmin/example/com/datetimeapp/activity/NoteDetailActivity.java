@@ -32,12 +32,16 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mradmin.example.com.datetimeapp.NoteNotificationService;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;
 import mradmin.example.com.datetimeapp.model.db.NoteEntityDao;
+import mradmin.example.com.datetimeapp.util.NoteAlarmManager;
 
 public class NoteDetailActivity extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    NoteAlarmManager noteAlarmManager = new NoteAlarmManager(this);
 
     public NoteEntity noteEntity;
     public boolean createNewNote = false;
@@ -278,6 +282,13 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                     Toast.makeText(NoteDetailActivity.this, "Note updated", Toast.LENGTH_SHORT).show();
                 }
             }.execute();
+        }
+
+        if(noteEntity.getDate() != null && noteEntity.isDated()){
+            Intent i = new Intent(NoteDetailActivity.this, NoteNotificationService.class);
+            i.putExtra(NoteNotificationService.NOTETEXT, noteEntity.getTitle());
+            i.putExtra(NoteNotificationService.NOTEID, noteEntity.getId());
+            noteAlarmManager.createAlarm(i, noteEntity.getId().hashCode(), new Date(noteEntity.getDate()).getTime());
         }
 
         System.out.println("+++++++++++++++++++++++ " + noteEntity);

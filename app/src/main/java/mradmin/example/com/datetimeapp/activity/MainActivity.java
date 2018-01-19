@@ -1,5 +1,7 @@
 package mradmin.example.com.datetimeapp.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +29,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import mradmin.example.com.datetimeapp.NoteNotificationService;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;
 import mradmin.example.com.datetimeapp.model.db.NoteEntityDao;
+import mradmin.example.com.datetimeapp.util.NoteAlarmManager;
 import mradmin.example.com.datetimeapp.util.NoteEntityComparator;
 import mradmin.example.com.datetimeapp.view.adapter.CustomRecyclerScrollViewListener;
 import mradmin.example.com.datetimeapp.view.adapter.MyItemTouchHelper;
@@ -37,6 +42,8 @@ import mradmin.example.com.datetimeapp.view.adapter.RecyclerSectionItemDecoratio
 import mradmin.example.com.datetimeapp.view.adapter.RecyclerViewEmptySupport;
 
 public class MainActivity extends AppCompatActivity {
+
+    NoteAlarmManager noteAlarmManager = new NoteAlarmManager(this);
 
     public static final String NOTE_ITEM = "com.example.mradmin.datetimeapp.MainActivity";
 
@@ -202,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
             final NoteEntity removeEntity = items.get(position);
 
             items.remove(items.get(position));
+            Intent i = new Intent(MainActivity.this,NoteNotificationService.class);
+            noteAlarmManager.deleteAlarm(i, removeEntity.getId().hashCode());
             notifyItemRemoved(position);
 
             new AsyncTask<NoteEntity, Void, Void>() {
@@ -219,6 +228,13 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(View v) {
 
                             items.add(removeIndex, removeEntity);
+
+                            if(removeEntity.getDate() != null && removeEntity.isDated()){
+                                Intent i = new Intent(MainActivity.this, NoteNotificationService.class);
+                                i.putExtra(NoteNotificationService.NOTETEXT, removeEntity.getTitle());
+                                i.putExtra(NoteNotificationService.NOTEID, removeEntity.getId());
+                                noteAlarmManager.createAlarm(i, removeEntity.getId().hashCode(), new Date(removeEntity.getDate()).getTime());
+                            }
 
                             notifyItemInserted(removeIndex);
 
