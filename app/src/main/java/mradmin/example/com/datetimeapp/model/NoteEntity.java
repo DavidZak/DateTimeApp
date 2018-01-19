@@ -21,7 +21,19 @@ public class NoteEntity implements Serializable {
     private String date;
     private boolean dated;
 
-    public NoteEntity(String id, int listPosition, String title, String description, String imageUrl, boolean pinned, String date, boolean dated) {
+    @NonNull
+    public long getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(@NonNull long creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @NonNull
+    private long creationDate;
+
+    public NoteEntity(@NonNull String id, int listPosition, String title, String description, String imageUrl, boolean pinned, String date, boolean dated, @NonNull long creationDate) {
         this.id = id;
         this.listPosition = listPosition;
         this.title = title;
@@ -30,7 +42,19 @@ public class NoteEntity implements Serializable {
         this.pinned = pinned;
         this.date = date;
         this.dated = dated;
+        this.creationDate = creationDate;
     }
+
+    /*public NoteEntity(String id, int listPosition, String title, String description, String imageUrl, boolean pinned, String date, boolean dated) {
+        this.id = id;
+        this.listPosition = listPosition;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.pinned = pinned;
+        this.date = date;
+        this.dated = dated;
+    }*/
 
     public NoteEntity() {
     }

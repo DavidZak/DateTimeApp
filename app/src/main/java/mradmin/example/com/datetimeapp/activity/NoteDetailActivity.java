@@ -237,8 +237,13 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
 
         final NoteEntityDao noteEntityDao = appDatabase.getNoteEntityDao();
 
+        long creationDate;
+
         if (noteEntity == null) {
-            noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, title, desc, imageUrl, isPinned, date, isDated);
+
+            creationDate = System.currentTimeMillis();
+
+            noteEntity = new NoteEntity(UUID.randomUUID().toString(), 0, title, desc, imageUrl, isPinned, date, isDated, creationDate);
 
             new AsyncTask<NoteEntity, Void, Void>() {
 
@@ -261,6 +266,9 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
             noteEntity.setDescription(desc);
             noteEntity.setImageUrl(imageUrl);
             noteEntity.setPinned(isPinned);
+
+            creationDate = System.currentTimeMillis();
+            noteEntity.setCreationDate(creationDate);
 
             new AsyncTask<NoteEntity, Void, Void>() {
                 @Override

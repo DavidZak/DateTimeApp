@@ -19,15 +19,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
 import mradmin.example.com.datetimeapp.model.db.AppDatabase;
 import mradmin.example.com.datetimeapp.model.db.NoteEntityDao;
+import mradmin.example.com.datetimeapp.util.NoteEntityComparator;
 import mradmin.example.com.datetimeapp.view.adapter.CustomRecyclerScrollViewListener;
 import mradmin.example.com.datetimeapp.view.adapter.MyItemTouchHelper;
 import mradmin.example.com.datetimeapp.view.adapter.RecyclerSectionItemDecoration;
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppDatabase appDatabase;
     private NoteEntityDao noteEntityDao;
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,24 +121,7 @@ public class MainActivity extends AppCompatActivity {
     public void initRecyclerView(final List<NoteEntity> noteEntities) {
         if (noteEntities != null && noteEntities.size() > 0) {
 
-            Collections.sort(noteEntities, new Comparator<NoteEntity>() {
-                @Override
-                public int compare(NoteEntity noteEntity, NoteEntity t1) {
-                    if (noteEntity.isPinned()) {
-                        if (t1.isPinned()) {
-                            return noteEntity.getTitle().compareTo(t1.getTitle());
-                        } else {
-                            return -1;
-                        }
-                    } else {
-                        if (t1.isPinned()) {
-                            return 1;
-                        } else {
-                            return noteEntity.getTitle().compareTo(t1.getTitle());
-                        }
-                    }
-                }
-            });
+            Collections.sort(noteEntities, new NoteEntityComparator());
 
             NoteAdapter noteAdapter = new NoteAdapter(noteEntities);
             recyclerViewMain.setAdapter(noteAdapter);
@@ -168,13 +156,12 @@ public class MainActivity extends AppCompatActivity {
         return new RecyclerSectionItemDecoration.SectionCallback() {
             @Override
             public boolean isSection(int position) {
+
                 if (containsIndex(notes, position) == null)
                     return position == 0;
                 else
                     return position == 0
-                        || notes.get(position).getTitle()
-                        .charAt(0) != notes.get(position - 1).getTitle()
-                        .charAt(0);
+                        ||  !(simpleDateFormat.format(new Date(notes.get(position).getCreationDate())).equals(simpleDateFormat.format(new Date(notes.get(position - 1).getCreationDate()))));
             }
 
             @Override
@@ -182,9 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 if (containsIndex(notes, position) == null)
                     return "";
                 else
-                    return notes.get(position).getTitle()
-                        .subSequence(0,
-                                1);
+                    return simpleDateFormat.format(new Date(notes.get(position).getCreationDate()));
             }
         };
     }
