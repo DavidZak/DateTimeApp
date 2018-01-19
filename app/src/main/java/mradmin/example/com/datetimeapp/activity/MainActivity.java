@@ -120,6 +120,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setAlarms(List<NoteEntity> entities){
+        if(entities != null) {
+            for(NoteEntity item : entities){
+                if(item.isDated() && item.getDate() != null){
+                    if(new Date(item.getDate()).before(new Date())){
+                        item.setDate(null);
+                        item.setDated(false);
+                        continue;
+                    }
+                    Intent i = new Intent(this, NoteNotificationService.class);
+                    i.putExtra(NoteNotificationService.NOTEID, item.getId());
+                    i.putExtra(NoteNotificationService.NOTETEXT, item.getTitle());
+                    noteAlarmManager.createAlarm(i, item.getId().hashCode(), new Date(item.getDate()).getTime());
+                }
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
         this.moveTaskToBack(true);
@@ -140,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
             ItemTouchHelper.Callback callback = new MyItemTouchHelper(noteAdapter);
             itemTouchHelper = new ItemTouchHelper(callback);
             itemTouchHelper.attachToRecyclerView(recyclerViewMain);
+
+            setAlarms(noteEntities);
         }
     }
 
