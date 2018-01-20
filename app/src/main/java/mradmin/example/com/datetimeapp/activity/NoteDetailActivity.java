@@ -3,6 +3,7 @@ package mradmin.example.com.datetimeapp.activity;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.service.voice.VoiceInteractionService;
@@ -21,9 +22,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +37,7 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import id.zelory.compressor.Compressor;
 import mradmin.example.com.datetimeapp.NoteNotificationService;
 import mradmin.example.com.datetimeapp.R;
 import mradmin.example.com.datetimeapp.model.NoteEntity;
@@ -77,8 +83,11 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM yyyy HH:mm");
 
     private Date noteDate;
+    private String imagePath;
 
     private boolean isPinned;
+
+    private static final int GALLERY_PICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +183,12 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
+                Intent galleryIntent = new Intent();
+                galleryIntent.setType("image/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+
             }
         });
 
@@ -194,7 +209,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
                 }
 
                 if (allFieldsOk())
-                    saveNote(title, description, null, date, isDated, isPinned);
+                    saveNote(title, description, imagePath, date, isDated, isPinned);
                 else
                     Toast.makeText(NoteDetailActivity.this, "You need to fill one or more fields", Toast.LENGTH_SHORT).show();
             }
@@ -321,6 +336,13 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
             switchCompat.setChecked(false);
         }
 
+        if (noteEntity.getImageUrl() != null && !noteEntity.getImageUrl().isEmpty()) {
+
+            imagePath = noteEntity.getImageUrl();
+
+            showImage(new File(imagePath));
+        }
+
     }
 
     public void setDate(int year, int month, int day) {
@@ -380,5 +402,65 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
         setTime(hourOfDay, minute);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+
+            CropImage.activity(imageUri)
+                    .setAspectRatio(1, 1)
+                    .start(this);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            if (resultCode == RESULT_OK) {
+
+                Uri resultUri = result.getUri();
+
+                uploadAvatarImage(resultUri);
+
+            }
+        }
+    }
+
+    private void showImage(File file) {
+
+        String path = file.getAbsolutePath();
+
+        if (!path.isEmpty() && path != null) {
+
+            imagePath = path;
+
+            Picasso.with(NoteDetailActivity.this)
+                    .load(file)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(noteImageView);
+        }
+    }
+
+    private void uploadAvatarImage(Uri url){
+
+        File filePath = new File(url.getPath());
+        File file = null;
+
+        try {
+            file = new Compressor(this)
+                    .setMaxWidth(400)
+                    .setMaxHeight(400)
+                    .setQuality(75)
+                    .compressToFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        showImage(file);
+
     }
 }

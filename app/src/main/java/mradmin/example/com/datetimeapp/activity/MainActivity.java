@@ -22,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -301,6 +304,15 @@ public class MainActivity extends AppCompatActivity {
                 holder.imageViewPinned.setVisibility(View.VISIBLE);
             } else {
                 holder.imageViewPinned.setVisibility(View.GONE);
+            }
+
+            if (noteEntity.getImageUrl() != null) {
+
+                Picasso.with(holder.mView.getContext())
+                        .load(new File(noteEntity.getImageUrl()))
+                        .placeholder(R.mipmap.ic_launcher)
+                        .resize(128, 128)
+                        .into(holder.imageViewImage);
             }
 
         }

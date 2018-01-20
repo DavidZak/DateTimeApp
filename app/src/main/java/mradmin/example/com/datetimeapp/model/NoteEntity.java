@@ -45,17 +45,6 @@ public class NoteEntity implements Serializable {
         this.creationDate = creationDate;
     }
 
-    /*public NoteEntity(String id, int listPosition, String title, String description, String imageUrl, boolean pinned, String date, boolean dated) {
-        this.id = id;
-        this.listPosition = listPosition;
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.pinned = pinned;
-        this.date = date;
-        this.dated = dated;
-    }*/
-
     public NoteEntity() {
     }
 
@@ -125,6 +114,6 @@ public class NoteEntity implements Serializable {
 
     @Override
     public String toString() {
-        return id + " === " + title + " -- " + description + " ---- " + date + " --- " + isDated();
+        return id + " === " + title + " -- " + description + " ---- " + date + " --- " + isDated() + "==-=-= " + imageUrl;
     }
 }
