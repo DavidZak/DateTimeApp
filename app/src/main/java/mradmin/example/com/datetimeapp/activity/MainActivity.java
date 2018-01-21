@@ -25,7 +25,9 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,9 +48,11 @@ import mradmin.example.com.datetimeapp.view.adapter.RecyclerViewEmptySupport;
 
 public class MainActivity extends AppCompatActivity {
 
-    NoteAlarmManager noteAlarmManager = new NoteAlarmManager(this);
+    NoteAlarmManager noteAlarmManager;
 
     public static final String NOTE_ITEM = "com.example.mradmin.datetimeapp.MainActivity";
+
+    private static final int REQUEST_ID_NOTE_ITEM = 100;
 
     public RecyclerViewEmptySupport recyclerViewMain;
     public ItemTouchHelper itemTouchHelper;
@@ -63,10 +67,14 @@ public class MainActivity extends AppCompatActivity {
 
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMM yyyy");
 
+    SimpleDateFormat dateFormatFull = new SimpleDateFormat("d MMM yyyy HH:mm");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        noteAlarmManager = new NoteAlarmManager(this);
 
         recyclerViewMain = findViewById(R.id.recyclerViewMain);
         recyclerViewMain.setEmptyView(findViewById(R.id.notesEmptyView));
@@ -127,7 +135,13 @@ public class MainActivity extends AppCompatActivity {
         if(entities != null) {
             for(NoteEntity item : entities){
                 if(item.isDated() && item.getDate() != null){
-                    if(new Date(item.getDate()).before(new Date())){
+                    Date date = null;
+                    try {
+                        date = dateFormatFull.parse(item.getDate());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if(date != null && date.before(new Date())){
                         item.setDate(null);
                         item.setDated(false);
                         continue;
@@ -135,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent i = new Intent(this, NoteNotificationService.class);
                     i.putExtra(NoteNotificationService.NOTEID, item.getId());
                     i.putExtra(NoteNotificationService.NOTETEXT, item.getTitle());
-                    noteAlarmManager.createAlarm(i, item.getId().hashCode(), new Date(item.getDate()).getTime());
+                    noteAlarmManager.createAlarm(i, item.getId().hashCode(), date.getTime());
                 }
             }
         }
@@ -202,6 +216,31 @@ public class MainActivity extends AppCompatActivity {
                     return simpleDateFormat.format(new Date(notes.get(position).getCreationDate()));
             }
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != RESULT_CANCELED && requestCode == REQUEST_ID_NOTE_ITEM){
+            NoteEntity item =(NoteEntity) data.getSerializableExtra(NOTE_ITEM);
+            if(item.getTitle().length() <= 0 || item.getDescription().length() <= 0){
+                return;
+            }
+
+            if(item.isDated() && item.getDate() != null) {
+                Intent i = new Intent(this, NoteNotificationService.class);
+                i.putExtra(NoteNotificationService.NOTETEXT, item.getTitle());
+                i.putExtra(NoteNotificationService.NOTEID, item.getId());
+
+                Date date = null;
+                try {
+                    date = dateFormatFull.parse(item.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (date != null)
+                noteAlarmManager.createAlarm(i, item.getId().hashCode(), date.getTime());
+            }
+        }
     }
 
     public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements MyItemTouchHelper.ItemTouchHelperAdapter {
