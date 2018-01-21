@@ -234,7 +234,7 @@ public class NoteDetailActivity extends AppCompatActivity implements  DatePicker
     }
 
     public void unpin() {
-        imageViewPin.setColorFilter(getResources().getColor(R.color.grey));
+        imageViewPin.setColorFilter(getResources().getColor(R.color.white));
         isPinned = false;
         Toast.makeText(this, "un pinned", Toast.LENGTH_SHORT).show();
     }

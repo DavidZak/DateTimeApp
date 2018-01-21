@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DateTimeApp.iml" filepath="$PROJECT_DIR$/DateTimeApp.iml" />
-      <module fileurl="file://C:\Users\mrAdmin\GITHUB_PROJECTS\DateTimeApp\DateTimeApp.iml" filepath="C:\Users\mrAdmin\GITHUB_PROJECTS\DateTimeApp\DateTimeApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\mrAdmin\GITHUB_PROJECTS\DateTimeApp\app\app.iml" filepath="C:\Users\mrAdmin\GITHUB_PROJECTS\DateTimeApp\app\app.iml" />
     </modules>
   </component>
 </project>
