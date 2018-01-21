@@ -41,7 +41,8 @@ public class NoteNotificationService extends IntentService {
         //Intent deleteIntent = new Intent(this, DeleteNotificationService.class);
         //deleteIntent.putExtra(NOTEID, noteId);
         Notification notification = new Notification.Builder(this)
-                .setContentTitle(noteTitle)
+                .setContentTitle("Notesco")
+                .setContentText(noteTitle)
                 .setSmallIcon(R.drawable.ic_calendar)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_SOUND)
