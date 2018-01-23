@@ -295,7 +295,15 @@ public class MainActivity extends AppCompatActivity {
                                 Intent i = new Intent(MainActivity.this, NoteNotificationService.class);
                                 i.putExtra(NoteNotificationService.NOTETEXT, removeEntity.getTitle());
                                 i.putExtra(NoteNotificationService.NOTEID, removeEntity.getId());
-                                noteAlarmManager.createAlarm(i, removeEntity.getId().hashCode(), new Date(removeEntity.getDate()).getTime());
+
+                                Date date = null;
+                                try {
+                                    date = dateFormatFull.parse(removeEntity.getDate());
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                if (date != null)
+                                noteAlarmManager.createAlarm(i, removeEntity.getId().hashCode(), date.getTime());
                             }
 
                             notifyItemInserted(removeIndex);
