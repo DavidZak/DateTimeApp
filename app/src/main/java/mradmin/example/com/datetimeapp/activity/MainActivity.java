@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
@@ -11,11 +13,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -60,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton floatingActionButton;
 
-    private CustomRecyclerScrollViewListener customRecyclerScrollViewListener;
-
     private AppDatabase appDatabase;
     private NoteEntityDao noteEntityDao;
 
@@ -69,10 +72,15 @@ public class MainActivity extends AppCompatActivity {
 
     SimpleDateFormat dateFormatFull = new SimpleDateFormat("d MMM yyyy HH:mm");
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
 
         noteAlarmManager = new NoteAlarmManager(this);
 
@@ -249,6 +257,60 @@ public class MainActivity extends AppCompatActivity {
 
         public static final String NOTE_ITEM = "com.example.mradmin.datetimeapp.MainActivity";
 
+        //////////////////////////
+        private boolean multiSelect = false;
+        private ArrayList<NoteEntity> selectedItems = new ArrayList<>();
+
+        private ActionMode actionMode;
+
+        private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                multiSelect = true;
+                getMenuInflater().inflate(R.menu.menu_note_detail, menu);
+                actionMode = mode;
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                for (final NoteEntity intItem : selectedItems) {
+
+                    new AsyncTask<NoteEntity, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(NoteEntity... params) {
+                            noteEntityDao.delete(intItem);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            items.remove(intItem);
+                            startSupportActionMode(actionModeCallbacks).finish();
+                            actionMode.finish();
+                        }
+                    }.execute();
+
+                }
+                mode.finish();
+                actionMode.finish();
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                multiSelect = false;
+                selectedItems.clear();
+                notifyDataSetChanged();
+            }
+        };
+        ///////////////////////////////
+
         @Override
         public void onItemMoved(int fromPosition, int toPosition) {
             if (fromPosition < toPosition) {
@@ -280,6 +342,12 @@ public class MainActivity extends AppCompatActivity {
                 protected Void doInBackground(NoteEntity... params) {
                     noteEntityDao.delete(removeEntity);
                     return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    startSupportActionMode(actionModeCallbacks).finish();
+                    actionMode.finish();
                 }
             }.execute();
 
@@ -353,14 +421,16 @@ public class MainActivity extends AppCompatActivity {
                 holder.imageViewPinned.setVisibility(View.GONE);
             }
 
-            if (noteEntity.getImageUrl() != null) {
+            if (noteEntity.getImageUrl() != null && !noteEntity.getImageUrl().isEmpty()) {
 
-                Picasso.with(holder.mView.getContext())
+                Picasso.with(MainActivity.this)
                         .load(new File(noteEntity.getImageUrl()))
                         .placeholder(R.mipmap.ic_launcher)
                         .resize(128, 128)
                         .into(holder.imageViewImage);
             }
+
+            holder.update(noteEntity);
 
         }
 
@@ -373,7 +443,6 @@ public class MainActivity extends AppCompatActivity {
 
             this.items = items;
         }
-
 
         @SuppressWarnings("deprecation")
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -391,17 +460,6 @@ public class MainActivity extends AppCompatActivity {
 
                 mView = v;
 
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        NoteEntity note = items.get(mradmin.example.com.datetimeapp.activity.MainActivity.NoteAdapter.ViewHolder.this.getAdapterPosition());
-                        Intent intent = new Intent(v.getContext(), NoteDetailActivity.class);
-                        intent.putExtra(NOTE_ITEM, note);
-                        v.getContext().startActivity(intent);
-                    }
-                });
-
                 imageViewImage = v.findViewById(R.id.imageViewNoteImage);
                 textViewTitle = v.findViewById(R.id.textViewNoteTitle);
                 textViewDescription = v.findViewById(R.id.textViewNoteDescription);
@@ -409,6 +467,61 @@ public class MainActivity extends AppCompatActivity {
                 imageViewPinned = v.findViewById(R.id.imageViewNotePinned);
 
             }
+
+            void selectItem(NoteEntity item) {
+                if (multiSelect) {
+                    if (selectedItems.contains(item)) {
+                        selectedItems.remove(item);
+                        mView.setBackground(getResources().getDrawable(R.drawable.note_row_layout_ripple));
+                    } else {
+                        selectedItems.add(item);
+                        mView.setBackgroundColor(getResources().getColor(R.color.rippleEffect));
+                    }
+
+                    actionMode.setTitle(selectedItems.size() + " selected");
+                }
+            }
+
+            void update(final NoteEntity value) {
+                //textView.setText(value + "");
+                if (selectedItems.contains(value)) {
+                    mView.setBackgroundColor(getResources().getColor(R.color.rippleEffect));
+                } else {
+                    mView.setBackground(getResources().getDrawable(R.drawable.note_row_layout_ripple));
+                }
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if (!multiSelect) {
+                            startSupportActionMode(actionModeCallbacks);
+                            selectItem(value);
+                        }
+                        return true;
+                    }
+                });
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (multiSelect) {
+
+                            if (selectedItems.size() == 1 && selectedItems.contains(value)){
+                                startSupportActionMode(actionModeCallbacks).finish();
+                                actionMode.finish();
+                            }
+
+                            selectItem(value);
+
+                        } else {
+                            NoteEntity note = items.get(mradmin.example.com.datetimeapp.activity.MainActivity.NoteAdapter.ViewHolder.this.getAdapterPosition());
+                            Intent intent = new Intent(MainActivity.this, NoteDetailActivity.class);
+                            intent.putExtra(NOTE_ITEM, note);
+                            startActivity(intent);
+                        }
+                    }
+                });
+            }
+
         }
     }
 }
